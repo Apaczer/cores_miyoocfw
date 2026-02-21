@@ -1,0 +1,25 @@
+From d861a1b787721b683c6266c723cffae1f7e9c36a Mon Sep 17 00:00:00 2001
+From: Apaczer <94932128+Apaczer@users.noreply.github.com>
+Date: Sat, 21 Feb 2026 19:22:24 +0100
+Subject: [PATCH] fix build common script
+
+---
+ libretro-build-common.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/libretro-build-common.sh b/libretro-build-common.sh
+index 88f6714f..01ba624b 100644
+--- a/libretro-build-common.sh
++++ b/libretro-build-common.sh
+@@ -20,7 +20,7 @@ die() {
+ #
+ #  echo_cmd "$MAKE TARGET=\"libretro\" $COMPILER OTHERVAR=\"$SOMETHING\""
+ #
+-if [ "${CC}" ] && [ "${CXX}" ]; then
++if [ "${CC}" ] && [ "${CXX}" ] && [ "${CC}" != "gcc" ] && [ "${CXX}" != "g++" ]; then
+ 	COMPILER="CC=\"${CC}\" CXX=\"${CXX}\""
+ else
+ 	COMPILER=""
+-- 
+2.45.2.windows.1
+

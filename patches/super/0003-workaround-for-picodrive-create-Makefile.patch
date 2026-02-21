@@ -1,0 +1,20 @@
+From fb274833bab6401ec30982d2d6da60e921640b23 Mon Sep 17 00:00:00 2001
+From: Apaczer <94932128+Apaczer@users.noreply.github.com>
+Date: Sat, 21 Feb 2026 19:21:29 +0100
+Subject: [PATCH] workaround for `picodrive` create Makefile
+
+---
+ Makefile.libretro-picodrive | 1 +
+ 1 file changed, 1 insertion(+)
+ create mode 100644 Makefile.libretro-picodrive
+
+diff --git a/Makefile.libretro-picodrive b/Makefile.libretro-picodrive
+new file mode 100644
+index 00000000..8cdfb5fe
+--- /dev/null
++++ b/Makefile.libretro-picodrive
+@@ -0,0 +1 @@
++	CC = $(TARGET_CC)
+-- 
+2.45.2.windows.1
+
