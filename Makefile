@@ -1,21 +1,22 @@
-MIYOO_CORES=$(shell cat cores_list)
+CORES ?= $(shell cat cores_list)
 TARGET_MACHINE=$(shell arm-linux-gcc -dumpmachine)
 
 ifeq ($(TARGET_MACHINE), arm-miyoo-linux-musleabi)
-mgba_platform=unix
+target_libc=musl
 else
-mgba_platform=miyoo
+target_libc=uclibc
 endif
 
 default: fetch build
 
 fetch:
-	./libretro-super/libretro-fetch.sh ${MIYOO_CORES}
-	./libretro-super/libretro-fetch.sh mgba
+	./libretro-super/libretro-fetch.sh ${CORES}
 
 build:
 	platform=miyoo ARCH=arm CC=arm-linux-gcc CXX=arm-linux-g++ STRIP=arm-linux-strip \
-		 ./libretro-super/libretro-build.sh ${MIYOO_CORES}
-	platform=$(mgba_platform) ARCH=arm CC=arm-linux-gcc CXX=arm-linux-g++ STRIP=arm-linux-strip \
-		./libretro-super/libretro-build.sh mgba
+		 ./libretro-super/libretro-build.sh ${CORES}
 	arm-linux-strip --strip-unneeded ./dist/unix/*
+
+release:
+	@mkdir -p cores/$(target_libc)/latest
+	mv ./dist/unix/* cores/$(target_libc)/latest/
