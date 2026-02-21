@@ -1,25 +1,16 @@
-From 4fb8e4c2c25aa9a67f65c0b080f06874e95394fe Mon Sep 17 00:00:00 2001
+From b870d28c7bfa9481d0067bc13707e32c28ee068d Mon Sep 17 00:00:00 2001
 From: Apaczer <94932128+Apaczer@users.noreply.github.com>
 Date: Sat, 21 Feb 2026 19:20:20 +0100
-Subject: [PATCH] fix picodrive & tic-80 core rules
+Subject: [PATCH] fix tic-80 core rules
 
 ---
- rules.d/core-rules.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ rules.d/core-rules.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/rules.d/core-rules.sh b/rules.d/core-rules.sh
-index 9a157fe8..a5aeb026 100644
+index 9a157fe8..c19f6fcd 100644
 --- a/rules.d/core-rules.sh
 +++ b/rules.d/core-rules.sh
-@@ -1138,7 +1138,7 @@ include_core_picodrive() {
- libretro_picodrive_name="Picodrive"
- libretro_picodrive_git_url="https://github.com/libretro/picodrive.git"
- libretro_picodrive_git_submodules="yes"
--libretro_picodrive_build_makefile="Makefile.libretro"
-+libretro_picodrive_build_makefile="Makefile.libretro -f ../Makefile.libretro-picodrive"
- 
- include_core_tgbdual() {
- 	register_module core "tgbdual" -ngc -ps3 -wii
 @@ -1504,7 +1504,7 @@ libretro_tic80_git_submodules="yes"
  libretro_tic80_build_subdir="core"
  libretro_tic80_build_extradir="lib/"

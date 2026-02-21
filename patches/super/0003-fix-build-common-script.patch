@@ -1,4 +1,4 @@
-From d861a1b787721b683c6266c723cffae1f7e9c36a Mon Sep 17 00:00:00 2001
+From b4c325ab0c353ece4447fad73832769229199111 Mon Sep 17 00:00:00 2001
 From: Apaczer <94932128+Apaczer@users.noreply.github.com>
 Date: Sat, 21 Feb 2026 19:22:24 +0100
 Subject: [PATCH] fix build common script
