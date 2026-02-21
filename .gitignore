@@ -1,0 +1,4 @@
+!libretro-super
+libretro-*
+dist/
+log/
