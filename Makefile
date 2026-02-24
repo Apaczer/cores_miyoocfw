@@ -24,33 +24,34 @@ else
 target_libc=.
 endif
 
-print_status = echo "\033[34m --> $1\033[0m"
+print_call = echo "\033[34m --> $1\033[0m"
 
-default: fetch build
+default: build
 
 patch-super:
 	@for patch in $(sort $(wildcard patches/$(PATCH_SUPER_DIR)/*.patch)); do \
-		$(call print_status, Applying $$patch); \
+		$(call print_call, Applying $$patch); \
 		patch -d $(BUILD_SUPER_DIR) -p1 < $$patch; \
 	done
+	touch patch-super
 
 fetch:
 	./$(BUILD_SUPER_DIR)/libretro-fetch.sh ${CORES}
 
-build:
+build: patch-super fetch
 	ARCH=$(ARCH) CC=$(CC) CXX=$(CXX) STRIP=$(STRIP) \
 	platform=$(PLATFORM) ./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
-	$(STRIP) --strip-unneeded ./dist/unix/*
+	$(STRIP) --strip-unneeded ./dist/$(PLATFORM)/*
 
 release: default
 	@echo "Zip compress generated cores"
-	@for f in ./dist/unix/*; \
+	@for f in ./dist/$(PLATFORM)/*; \
 		do [ -f "$$f" ] && \
 		zip -m "$$f.zip" "$$f" && \
 		echo "$$(stat -c '%y' $$f.zip | cut -f 1 -d ' ') $$(crc32 $$f.zip) $$f.zip" | tee -a .core-updater-list; \
 	done
 	@mkdir -p cores/$(target_libc)/latest
-	mv ./dist/unix/* cores/$(target_libc)/latest/
+	mv ./dist/$(PLATFORM)/* cores/$(target_libc)/latest/
 	@echo "Update \"cores_list\" in .index-extended"
 	@cat .core-updater-list > cores/$(target_libc)/latest/.index-extended
 	@rm .core-updater-list

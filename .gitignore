@@ -3,3 +3,4 @@ libretro-*
 dist/
 log/
 *.so
+patch-super
