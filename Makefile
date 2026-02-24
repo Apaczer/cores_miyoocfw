@@ -1,12 +1,27 @@
+
+# General variables
 CORES ?= $(shell cat cores_list)
-TARGET_MACHINE=$(shell arm-linux-gcc -dumpmachine)
 BUILD_SUPER_DIR = libretro-super
 PATCH_SUPER_DIR = super
+PLATFORM ?= miyoo
 
-ifeq ($(TARGET_MACHINE), arm-miyoo-linux-musleabi)
+# Compiler variables
+CHAINPREFIX ?= /opt/miyoo
+CROSS_COMPILE ?= $(CHAINPREFIX)/usr/bin/arm-linux-
+ARCH ?= arm
+
+CC = $(CROSS_COMPILE)gcc
+CXX = $(CROSS_COMPILE)g++
+STRIP = $(CROSS_COMPILE)strip
+SYSROOT ?= $(shell$(CC) --print-sysroot)
+TARGET_MACHINE=$(shell $(CC) -dumpmachine)
+
+ifneq ($(findstring musl, $(TARGET_MACHINE)),)
 target_libc=musl
-else
+else ($(findstring uclibc, $(TARGET_MACHINE)),)
 target_libc=uclibc
+else
+target_libc=.
 endif
 
 print_status = echo "\033[34m --> $1\033[0m"
@@ -23,9 +38,9 @@ fetch:
 	./$(BUILD_SUPER_DIR)/libretro-fetch.sh ${CORES}
 
 build:
-	platform=miyoo ARCH=arm CC=arm-linux-gcc CXX=arm-linux-g++ STRIP=arm-linux-strip \
-		 ./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
-	arm-linux-strip --strip-unneeded ./dist/unix/*
+	ARCH=$(ARCH) CC=$(CC) CXX=$(CXX) STRIP=$(STRIP) \
+	platform=$(PLATFORM) ./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
+	$(STRIP) --strip-unneeded ./dist/unix/*
 
 release:
 	@mkdir -p cores/$(target_libc)/latest
