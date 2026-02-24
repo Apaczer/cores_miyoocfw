@@ -2,3 +2,4 @@
 libretro-*
 dist/
 log/
+*.so
