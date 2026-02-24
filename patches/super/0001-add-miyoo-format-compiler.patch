@@ -18,7 +18,7 @@ index 3a048e53..4ac783a4 100644
 +				miyoo)
 +						FORMAT_EXT="so"
 +						FORMAT_COMPILER_TARGET="miyoo"
-+						DIST_DIR="unix"
++						DIST_DIR="miyoo"
 +						;;
  				android)
  					FORMAT_EXT="so"
