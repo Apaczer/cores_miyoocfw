@@ -18,7 +18,7 @@ TARGET_MACHINE=$(shell $(CC) -dumpmachine)
 
 ifneq ($(findstring musl, $(TARGET_MACHINE)),)
 target_libc=musl
-else ($(findstring uclibc, $(TARGET_MACHINE)),)
+else ifneq ($(findstring uclibc, $(TARGET_MACHINE)),)
 target_libc=uclibc
 else
 target_libc=.
@@ -42,6 +42,16 @@ build:
 	platform=$(PLATFORM) ./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
 	$(STRIP) --strip-unneeded ./dist/unix/*
 
-release:
+release: default
+	@echo "Zip compress generated cores"
+	@for f in ./dist/unix/*; \
+		do [ -f "$$f" ] && \
+		zip -m "$$f.zip" "$$f" && \
+		echo "$$(stat -c '%y' $$f.zip | cut -f 1 -d ' ') $$(crc32 $$f.zip) $$f.zip" | tee -a .core-updater-list; \
+	done
 	@mkdir -p cores/$(target_libc)/latest
 	mv ./dist/unix/* cores/$(target_libc)/latest/
+	@echo "Update \"cores_list\" in .index-extended"
+	@cat .core-updater-list > cores/$(target_libc)/latest/.index-extended
+	@rm .core-updater-list
+	@sort cores/$(target_libc)/latest/.index-extended -o cores/$(target_libc)/latest/.index-extended
