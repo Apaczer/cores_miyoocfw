@@ -1,0 +1,17 @@
+
+name: CI Build
+
+on: [push, pull_request]
+
+jobs:
+  build-uclibc:
+    name: Build libretro cores for Miyoo (musl)
+    runs-on: ubuntu-22.04
+    container:
+      image: miyoocfw/toolchain-shared-musl
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: build
+      run: make release

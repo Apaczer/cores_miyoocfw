@@ -1,0 +1,19 @@
+
+name: CI Native Build
+
+on: [push, pull_request]
+
+jobs:
+  build-uclibc:
+    name: Build libretro cores (native)
+    runs-on: ubuntu-22.04
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+    - name: build
+      run: |
+        sudo apt-get update && sudo apt-get install -y build-essential libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libbz2-dev
+        ARCH="x86" CROSS_COMPILE="" PLATFORM="unix" \
+        CORES="2048 81" \
+        make release
