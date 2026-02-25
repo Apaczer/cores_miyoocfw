@@ -1,3 +1,5 @@
+SHELL := /bin/bash
+.SHELLFLAGS := -O extglob -c
 
 # General variables
 CORES ?= $(shell cat cores_list)
@@ -24,8 +26,8 @@ else
 target_libc=.
 endif
 
-print_info = echo "\033[34m $1\033[0m"
-print_error = echo "\033[31m $1\033[0m"
+print_info = echo -e "\033[34m $1\033[0m"
+print_error = echo -e "\033[31m $1\033[0m"
 
 default: build
 
@@ -61,3 +63,12 @@ release: default
 	@cat .core-updater-list > cores/$(target_libc)/latest/.index-extended
 	@rm .core-updater-list
 	@sort cores/$(target_libc)/latest/.index-extended -o cores/$(target_libc)/latest/.index-extended
+
+clean:
+	rm -rf libretro-!(super)
+	rm -rf dist/*
+	rm -rf log
+
+clean-all: clean
+	rm -rf libretro-super
+	-rm patch-super
