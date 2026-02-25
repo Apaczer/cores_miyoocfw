@@ -24,13 +24,18 @@ else
 target_libc=.
 endif
 
-print_call = echo "\033[34m --> $1\033[0m"
+print_info = echo "\033[34m $1\033[0m"
+print_error = echo "\033[31m $1\033[0m"
 
 default: build
 
 patch-super:
+	@if ! test -f $(BUILD_SUPER_DIR)/libretro-build.sh; then \
+		$(call print_error, libretro-super is missing -> run 'git submodule update --init --recursive'); \
+		exit 1 ;\
+	fi
 	@for patch in $(sort $(wildcard patches/$(PATCH_SUPER_DIR)/*.patch)); do \
-		$(call print_call, Applying $$patch); \
+		$(call print_info, Applying $$patch); \
 		patch -d $(BUILD_SUPER_DIR) -p1 < $$patch; \
 	done
 	touch patch-super
