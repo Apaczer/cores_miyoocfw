@@ -52,7 +52,8 @@ build: patch-super fetch
 
 release: default
 	@echo "Zip compress generated cores"
-	@for f in ./dist/$(PLATFORM)/*; \
+	@cd ./dist/$(PLATFORM); \
+	for f in *; \
 		do [ -f "$$f" ] && \
 		zip -m "$$f.zip" "$$f" && \
 		echo "$$(stat -c '%y' $$f.zip | cut -f 1 -d ' ') $$(crc32 $$f.zip) $$f.zip" | tee -a .core-updater-list; \
@@ -60,8 +61,8 @@ release: default
 	@mkdir -p cores/$(target_libc)/latest
 	mv ./dist/$(PLATFORM)/* cores/$(target_libc)/latest/
 	@echo "Update \"cores_list\" in .index-extended"
-	@cat .core-updater-list > cores/$(target_libc)/latest/.index-extended
-	@rm .core-updater-list
+	@cat ./dist/$(PLATFORM)/.core-updater-list > cores/$(target_libc)/latest/.index-extended
+	@rm ./dist/$(PLATFORM)/.core-updater-list
 	@sort cores/$(target_libc)/latest/.index-extended -o cores/$(target_libc)/latest/.index-extended
 
 clean:
