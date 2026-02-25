@@ -6,6 +6,9 @@ CORES ?= $(shell cat cores_list)
 BUILD_SUPER_DIR = libretro-super
 PATCH_SUPER_DIR = super
 PLATFORM ?= miyoo
+SKIP_UNCHANGED ?= "" #ifdef will skip builds with the same git revisions
+BUILD_REVISIONS_DIR ?= cores/$(target_libc)/build-revisions-latest #dir for build_save_revision
+WORKDIR= $(shell realpath .)
 
 # Compiler variables
 CHAINPREFIX ?= /opt/miyoo
@@ -47,7 +50,9 @@ fetch:
 
 build: patch-super fetch
 	ARCH=$(ARCH) CC=$(CC) CXX=$(CXX) STRIP=$(STRIP) \
-	platform=$(PLATFORM) ./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
+	SKIP_UNCHANGED=$(SKIP_UNCHANGED) BUILD_REVISIONS_DIR=$(WORKDIR)/$(BUILD_REVISIONS_DIR) \
+	platform=$(PLATFORM) \
+	./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
 	$(STRIP) --strip-unneeded ./dist/$(PLATFORM)/*
 
 release: default

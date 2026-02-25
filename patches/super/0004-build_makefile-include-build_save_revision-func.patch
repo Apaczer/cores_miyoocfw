@@ -1,0 +1,25 @@
+From 6b6f39f7c4f4664749af4ceeccf38877a2db1e23 Mon Sep 17 00:00:00 2001
+From: Apaczer <94932128+Apaczer@users.noreply.github.com>
+Date: Wed, 25 Feb 2026 22:24:13 +0100
+Subject: [PATCH] build_makefile: include `build_save_revision` func
+
+---
+ libretro-build-common.sh | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/libretro-build-common.sh b/libretro-build-common.sh
+index 01ba624b..0a2cd4ae 100644
+--- a/libretro-build-common.sh
++++ b/libretro-build-common.sh
+@@ -230,6 +230,8 @@ build_makefile() {
+ 		$core_build_prepkg
+ 		for a in $core_build_cores; do
+ 			copy_core_to_dist ${core_build_products:+$core_build_products/}$a $a
++			echo "Revision check for $1"
++			build_save_revision $? $1
+ 		done
+ 	else
+ 		echo "$1 not fetched, skipping ..."
+-- 
+2.45.2.windows.1
+

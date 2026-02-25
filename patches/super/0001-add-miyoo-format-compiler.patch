@@ -1,14 +1,15 @@
-From 12d44a55fe061ca06232007d1ceadf7f08ccedda Mon Sep 17 00:00:00 2001
+From d61517c80eaf1e1026b585e97162406fc78573c8 Mon Sep 17 00:00:00 2001
 From: Apaczer <94932128+Apaczer@users.noreply.github.com>
 Date: Sat, 21 Feb 2026 19:18:14 +0100
 Subject: [PATCH] add `miyoo` format compiler
 
+Update libretro-config.sh
 ---
  libretro-config.sh | 5 +++++
  1 file changed, 5 insertions(+)
 
 diff --git a/libretro-config.sh b/libretro-config.sh
-index 3a048e53..4ac783a4 100644
+index 3a048e53..92cc2dec 100644
 --- a/libretro-config.sh
 +++ b/libretro-config.sh
 @@ -984,6 +984,11 @@ case "$platform" in
