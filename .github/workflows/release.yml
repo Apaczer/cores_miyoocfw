@@ -13,5 +13,20 @@ jobs:
     - uses: actions/checkout@v4
       with:
         submodules: recursive
+        token: ${{ secrets.GH_PAT }}
     - name: build
-      run: make release
+      run: make SKIP_UNCHANGED=1 release
+    - name: output "log/"
+      run: |
+        cat log/libretro-super.log
+    - name: Check for git status
+      id: status
+      run: |
+        echo "changes=$(git status -z --porcelain)" >> $GITHUB_OUTPUT
+    - name: Push changes
+      if: ${{ steps.status.outputs.changes }}
+      run: |
+        git config user.email "action@github.com"
+        git config user.name "GitHub Actions"
+        git commit -a -m "Update Miyoo cores $(date) (musl)"
+        git push
