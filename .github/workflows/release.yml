@@ -22,11 +22,16 @@ jobs:
     - name: Check for git status
       id: status
       run: |
+        git config --global --add safe.directory /__w/cores_miyoocfw/cores_miyoocfw
         echo "changes=$(git status -z --porcelain)" >> $GITHUB_OUTPUT
     - name: Push changes
       if: ${{ steps.status.outputs.changes }}
       run: |
         git config user.email "action@github.com"
         git config user.name "GitHub Actions"
-        git commit -a -m "Update Miyoo cores $(date) (musl)"
+        git status
+        git add cores/*/build-revisions-latest/* \
+         cores/*/latest/* \
+         cores/*/latest/.index-extended
+        git commit -m "Update Miyoo cores $(date) (musl)"
         git push
