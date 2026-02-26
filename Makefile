@@ -29,8 +29,8 @@ else
 target_libc=.
 endif
 
-print_info = echo -e "\033[34m $1\033[0m"
-print_error = echo -e "\033[31m $1\033[0m"
+print_info = printf "\033[34m $1\033[0m\n"
+print_error = printf "\033[31m $1\033[0m\n"
 
 default: build
 
@@ -43,7 +43,7 @@ patch-super:
 		$(call print_info, Applying $$patch); \
 		patch -d $(BUILD_SUPER_DIR) -p1 < $$patch; \
 	done
-	touch patch-super
+	@touch patch-super
 
 fetch:
 	./$(BUILD_SUPER_DIR)/libretro-fetch.sh ${CORES}
@@ -53,22 +53,32 @@ build: patch-super fetch
 	SKIP_UNCHANGED=$(SKIP_UNCHANGED) BUILD_REVISIONS_DIR=$(WORKDIR)/$(BUILD_REVISIONS_DIR) \
 	platform=$(PLATFORM) \
 	./$(BUILD_SUPER_DIR)/libretro-build.sh ${CORES}
+	@if ! find dist/$(PLATFORM) -maxdepth 1 -type f | read; then \
+		$(call print_error, The "dist/" dir is empty = nothing to update -> Exiting...'); \
+		exit 1 ;\
+	fi
 	$(STRIP) --strip-unneeded ./dist/$(PLATFORM)/*
 
-release: default
+dist: default
 	@echo "Zip compress generated cores"
 	@cd ./dist/$(PLATFORM); \
 	for f in *; \
 		do [ -f "$$f" ] && \
-		zip -m "$$f.zip" "$$f" && \
-		echo "$$(stat -c '%y' $$f.zip | cut -f 1 -d ' ') $$(crc32 $$f.zip) $$f.zip" | tee -a .core-updater-list; \
+		zip -m "$$f.zip" "$$f"; \
 	done
 	@mkdir -p cores/$(target_libc)/latest
 	mv ./dist/$(PLATFORM)/* cores/$(target_libc)/latest/
+
+index:
 	@echo "Update \"cores_list\" in .index-extended"
-	@cat ./dist/$(PLATFORM)/.core-updater-list > cores/$(target_libc)/latest/.index-extended
-	@rm ./dist/$(PLATFORM)/.core-updater-list
-	@sort cores/$(target_libc)/latest/.index-extended -o cores/$(target_libc)/latest/.index-extended
+	@cd cores/$(target_libc)/latest; \
+	rm -f .index-extended; \
+	for f in *; \
+		do [ -f "$$f" ] && \
+		echo "$$(stat -c '%y' $$f | cut -f 1 -d ' ') $$(crc32 $$f) $$f" | tee -a .index-extended; \
+	done
+
+release: dist index
 
 clean:
 	rm -rf libretro-!(super)
