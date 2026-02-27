@@ -1,0 +1,42 @@
+
+name: Nightly Update
+
+on:
+  # Run nightly: 8am UTC = 3am Eastern
+  schedule:
+  - cron: '0 8 * * *'
+  # Or run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  build-uclibc:
+    name: Build Nightly libretro cores (musl)
+    runs-on: ubuntu-22.04
+    container:
+      image: miyoocfw/toolchain-shared-musl
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        token: ${{ secrets.GH_PAT }}
+    - name: build
+      run: make SKIP_UNCHANGED=1 release
+    - name: output "log/libretro-super.log"
+      run: |
+        cat log/libretro-super.log
+    - name: Check for git status
+      id: status
+      run: |
+        git config --global --add safe.directory /__w/cores_miyoocfw/cores_miyoocfw
+        echo "changes=$(git status -z --porcelain)" >> $GITHUB_OUTPUT
+    - name: Push update changes
+      if: ${{ steps.status.outputs.changes }}
+      run: |
+        git config user.email "action@github.com"
+        git config user.name "GitHub Actions"
+        git status
+        git add cores/*/build-revisions-latest/* \
+         cores/*/latest/* \
+         cores/*/latest/.index-extended
+        git commit -m "Update Miyoo cores $(date) (musl)"
+        git push

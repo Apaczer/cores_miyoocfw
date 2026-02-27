@@ -15,8 +15,7 @@ jobs:
       run: |
         sudo apt-get update && sudo apt-get install -y build-essential libsdl1.2-dev libsdl-image1.2-dev libsdl-mixer1.2-dev libbz2-dev
         ARCH="x86" CROSS_COMPILE="" PLATFORM="unix" \
-        CORES="2048 81" \
         make release
-    - name: output log/
+    - name: output log/libretro-super.log
       run: |
         cat log/libretro-super.log
