@@ -27,7 +27,7 @@ jobs:
     - name: Check for git status
       id: status
       run: |
-        git config --global --add safe.directory /__w/cores_miyoocfw/cores_miyoocfw
+        git config --global --add safe.directory "$GITHUB_WORKSPACE"
         echo "changes=$(git status -z --porcelain)" >> $GITHUB_OUTPUT
     - name: Push update changes
       if: ${{ steps.status.outputs.changes }}
