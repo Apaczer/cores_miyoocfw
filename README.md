@@ -17,7 +17,7 @@ NOTES:
 
 - fetch & compile & build
 ```
-make SKIP_UNCHANGED=1 CORES=<list cores> PLATFORM="" dist
+make CORES=<list cores> CROSS_COMPILE="" PLATFORM="" dist
 ```
 NOTES:
 - the `PLATFORM=` var. is unset on purpose for test results (which are gitignored from `$TOPDIR/cores/latest` content.
