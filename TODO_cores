@@ -1,0 +1,6 @@
+arduous - fails to save revision
+tic80 - fails to save revision
+wasm4 - fails to save revision
+mgba - needs patch to enable -DLOCALE on musl
+ecwolf - broken submodule paths
+picodrive - use native gcc for CC files (fails to compile cyclongen)
