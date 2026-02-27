@@ -14,7 +14,7 @@ jobs:
       with:
         submodules: recursive
     - name: fetch & compile cores
-      run: make SKIP_UNCHANGED=1 release
+      run: make release
     - name: output "log/libretro-super"
       run: |
         cat log/libretro-super.log
