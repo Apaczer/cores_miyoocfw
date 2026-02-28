@@ -1,6 +1,6 @@
 # MiyooCFW cores
 
-List of generated cores (read by Makefile) can be found in `cores_list` file in topdir.
+Continuous Integration layer for generating libretro cores. List of auto-generated cores can be found at `cores_list` file in topdir.
 
 ## Cross-Compile build (MiyooCFW):
 
@@ -12,6 +12,7 @@ NOTES:
 - to not rebuild the same cores add `SKIP_UNCHANGED=1` flag to make, which generated revisions files (if needed) for build checks
 - don't use jobs parallel mode in make (it will be auto invoked in build process of cores)
 - build logs can be found at `$TOPDIR/logs/`
+- to build specific core pass `CORES=<list cores>"` flag to make
 
 ## Native TEST build (linux):
 
